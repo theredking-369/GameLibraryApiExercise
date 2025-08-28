@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameLibraryApi.Interfaces;
+using GameLibraryApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,46 @@ namespace GameLibraryApi.Controllers
     [ApiController]
     public class GameStuffController : ControllerBase
     {
+        private IGameService _gameService;
+
+        public GameStuffController(IGameService gameService)
+        {
+            _gameService = gameService;
+        }
+
         // GET: api/<GameStuffController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<GameInformation> GetAllGames()
         {
-            return new string[] { "value1", "value2" };
+            return _gameService.GetAllGames();
         }
 
         // GET api/<GameStuffController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public GameInformation Get(int id)
         {
-            return "value";
+            return _gameService.GetGame(id);
         }
 
         // POST api/<GameStuffController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] GameInformation gameInformation)
         {
+            _gameService.CreateGame(gameInformation);
         }
 
         // PUT api/<GameStuffController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] GameInformation gameInformation)
         {
+            _gameService.EditGame(gameInformation);
         }
 
         // DELETE api/<GameStuffController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _gameService.DeleteGame(id);
         }
     }
 }
