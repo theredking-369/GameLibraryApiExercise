@@ -4,9 +4,9 @@ namespace GameLibraryApi.Interfaces
 {
     public interface IGameService
     {
-        void CreateGame(GameInformation gameInformation);
+        GameInformation CreateGame(GameInformation gameInformation);
         void DeleteGame(int id);
-        void EditGame(GameInformation gameInformation);
+        GameInformation EditGame(GameInformation gameInformation);
         List<GameInformation> GetAllGames();
         GameInformation GetGame(int id);
     }
