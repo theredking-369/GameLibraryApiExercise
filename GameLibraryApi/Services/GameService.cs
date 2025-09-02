@@ -22,9 +22,10 @@ namespace GameLibraryApi.Services
         }
 
        
-        public void CreateGame(GameInformation gameInformation)
+        public GameInformation CreateGame(GameInformation gameInformation)
         {
             _games.Add(gameInformation);
+            return GetGame(gameInformation.Id);
         } 
         public void EditGame(GameInformation gameInformation)
         {

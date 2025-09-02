@@ -19,23 +19,71 @@ namespace GameLibraryApi.Controllers
 
         // GET: api/<GameStuffController>
         [HttpGet]
-        public IEnumerable<GameInformation> GetAllGames()
+        public IActionResult GetAllGames()
         {
-            return _gameService.GetAllGames();
+            try
+            {
+                List<GameInformation> games = _gameService.GetAllGames();
+                if (games == null)
+                {
+                    return NotFound();
+                }
+                return Ok(games);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500);
+            }
+            
         }
 
         // GET api/<GameStuffController>/5
         [HttpGet("{id}")]
-        public GameInformation Get(int id)
+        public IActionResult Get(int id)
         {
-            return _gameService.GetGame(id);
+            try
+            {
+                GameInformation game = _gameService.GetGame(id);
+                if (game == null)
+                {
+                    return NotFound();
+                }
+                return Ok(game);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500);
+            }
         }
 
         // POST api/<GameStuffController>
         [HttpPost]
-        public void Post([FromBody] GameInformation gameInformation)
+        public IActionResult Post([FromBody] GameInformation gameInformation)
         {
-            _gameService.CreateGame(gameInformation);
+            if (gameInformation == null || !ModelState.IsValid)
+            {
+                return BadRequest("Incorrect Game Information Provided");
+            }
+
+            try
+            {
+                GameInformation gameInfo = _gameService.GetGame(gameInformation.Id);
+                if (gameInfo == null)
+                {
+                    return Ok(_gameService.CreateGame(gameInformation));
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, "Game Already Exists");
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500);
+            }
+            
+            
         }
 
         // PUT api/<GameStuffController>/5
