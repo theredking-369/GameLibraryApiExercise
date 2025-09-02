@@ -88,16 +88,57 @@ namespace GameLibraryApi.Controllers
 
         // PUT api/<GameStuffController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] GameInformation gameInformation)
+        public IActionResult Put(int id, [FromBody] GameInformation gameInformation)
         {
-            _gameService.EditGame(gameInformation);
+            if (gameInformation == null || !ModelState.IsValid)
+            {
+                return BadRequest("Incorrect Game Information Provided");
+            }
+            try
+            {
+                GameInformation gameInfo = _gameService.GetGame(gameInformation.Id);
+                if (gameInfo == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(_gameService.EditGame(gameInformation));
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+            
         }
 
         // DELETE api/<GameStuffController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            _gameService.DeleteGame(id);
+
+            try
+            {
+                GameInformation gameInfo = _gameService.GetGame(id);
+                if (gameInfo == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    _gameService.DeleteGame(id);
+                    return Ok();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+            
         }
     }
 }

@@ -27,11 +27,13 @@ namespace GameLibraryApi.Services
             _games.Add(gameInformation);
             return GetGame(gameInformation.Id);
         } 
-        public void EditGame(GameInformation gameInformation)
+        public GameInformation EditGame(GameInformation gameInformation)
         {
             GameInformation infoToEdit = GetGame(gameInformation.Id);
             int pos = _games.IndexOf(infoToEdit);
             _games[pos] = gameInformation;
+
+            return gameInformation;
         }
 
         public void DeleteGame(int id)
